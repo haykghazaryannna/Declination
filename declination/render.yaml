@@ -1,0 +1,29 @@
+# One-click deploy on Render: dashboard > New > Blueprint > pick this repo (see docs/DEPLOYMENT.md).
+# NOTE: a persistent disk needs a paid instance type (starter). Without a disk, data resets on every deploy.
+services:
+  - type: web
+    name: declination
+    runtime: node
+    plan: starter
+    buildCommand: echo "no build step"
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: DATA_DIR
+        value: /var/data
+      - key: DEMO_PASSWORD
+        value: wyoming1230   # demo login: anna@declination.app (change or delete this line to lock the demo account)
+      - key: APP_URL
+        sync: false        # set to your public link, e.g. https://declination.onrender.com
+      - key: RESEND_API_KEY
+        sync: false        # optional: enables password-reset emails
+      - key: MAIL_FROM
+        sync: false        # optional: e.g. "Declination <hello@yourdomain.com>"
+    disk:
+      name: declination-data
+      mountPath: /var/data
+      sizeGB: 1
